@@ -1,12 +1,11 @@
 <body>
-<script src="data.js">
-  data = [[30,30,50,50], [40,40,60,60]];
-</script>
-<canvas id="C" width="800" height="200" style="border:black 1px solid"></canvas>
+<script src="./data.js"></script>
+<canvas id="C" width="800" height="220" style="border:black 1px solid"></canvas>
 <div onclick="run()" id="D">[start]</div>
 <script>
-var C, D;
+var interval = 30;
 
+var C, D;
 function run () {
     idx = 0;
     C = document.getElementById("C").getContext("2d");
@@ -17,16 +16,20 @@ function run () {
 function anima (idx) {
     if (idx >= data.length)
         return D.innerHTML="finish";
-    C.clearRect(0,0, 800, 200);
+    C.clearRect(0,0, 800, 220);
+    C.beginPath();
+    C.moveTo(0,201);
+    C.lineTo(800, 201);
+    C.stroke();
     display(idx);
-    setTimeout(anima, 100, idx+1);
+    setTimeout(anima, interval, idx+1);
 }
 function display (idx) {
     var ls = data[idx], len = ls.length;
     for (var i=0; i<len; i+=4) {
         C.beginPath();
-        C.moveTo(ls[i], ls[i+1]);
-        C.lineTo(ls[i+2], ls[i+3]);
+        C.moveTo(ls[i], 200-ls[i+1]);
+        C.lineTo(ls[i+2], 200-ls[i+3]);
         C.stroke();
     }
 }
