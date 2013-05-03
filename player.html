@@ -1,35 +1,37 @@
-<body>
+<body onclick="run()">
 <script src="./data.js"></script>
 <canvas id="C" width="800" height="220" style="border:black 1px solid"></canvas>
-<div onclick="run()" id="D">[run]</div>
+<div id="D"><div>
 <script>
-var interval = 30;
-var C, D;
+var interval = 10
+
 function run () {
-  idx = 0;
   C = document.getElementById("C").getContext("2d");
   D = document.getElementById("D");
   D.innerHTML = "runninng";
+	C.lineWidth = 1.3;
+  C.beginPath()
+  C.moveTo(0,201)
+  C.lineTo(800, 201)
+  C.stroke()
+	C.lineWidth = 5;
   anima(0);
 }
 function anima (idx) {
   if (idx >= data.length)
     return D.innerHTML="finish";
-  C.clearRect(0,0, 800, 220);
-  C.beginPath();
-  C.moveTo(0,201);
-  C.lineTo(800, 201);
-  C.stroke();
-  display(idx);
-  setTimeout(anima, interval, idx+1);
+  C.clearRect(0,0, 800, 200)
+  C.clearRect(0,202, 800, 203)
+  display(idx)
+  setTimeout(anima, interval, idx+1)
 }
 function display (idx) {
-  var ls = data[idx], len = ls.length;
+  var ls = data[idx], len = ls.length
   for (var i=0; i<len; i+=4) {
-    C.beginPath();
-    C.moveTo(ls[i], 200-ls[i+1]);
-    C.lineTo(ls[i+2], 200-ls[i+3]);
-    C.stroke();
+    C.beginPath()
+    C.moveTo(ls[i], 200-ls[i+1])
+    C.lineTo(ls[i+2], 200-ls[i+3])
+    C.stroke()
   }
 }
 </script>
