@@ -1,0 +1,31 @@
+<body>
+<script src="data.js"></script>
+<canvas id="C" width="800" height="200" style="border:black 1px solid"></canvas>
+<div onclick="run()" id="D">[start]</div>
+<script>
+var C, D;
+    data = [[30,30,50,50], [40,40,60,60]];
+function run () {
+    idx = 0;
+    C = document.getElementById("C").getContext("2d");
+    D = document.getElementById("D");
+    D.innerHTML = "runninng";
+    anima(0);
+}
+function anima (idx) {
+    if (idx >= data.length)
+        return D.innerHTML="finish";
+    C.clearRect(0,0, 800, 200);
+    display(idx);
+    setTimeout(anima, 100, idx+1);
+}
+function display (idx) {
+    var ls = data[idx], len = ls.length;
+    for (var i=0; i<len; i+=4) {
+        C.beginPath();
+        C.moveTo(ls[i], ls[i+1]);
+        C.lineTo(ls[i+2], ls[i+3]);
+        C.stroke();
+    }
+}
+</script>
