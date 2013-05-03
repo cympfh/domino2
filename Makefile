@@ -1,5 +1,5 @@
 data.js: main.scm input
-	time gosh ./main.scm > $@ < input
+	gosh ./main.scm > $@ < input
 
 main.scm: util.scm domino.scm
 	cat $^ > $@

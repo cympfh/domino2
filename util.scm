@@ -11,7 +11,10 @@
 (define (make-domino x y t)
   (let ((x x) (y y) (theta t)
         (vx 0) (vy 0) (omega 0)
-        (x1 0) (x2 0) (y1 0) (y2 0))
+        (x1 (- x (* *height/2* (cos t))))
+				(x2 (+ x (* *height/2* (cos t))))
+				(y1 (- y (* *height/2* (sin t))))
+				(y2 (+ y (* *height/2* (sin t)))))
   (lambda args
     (if (= (length args) 1)
         (case (car args)
