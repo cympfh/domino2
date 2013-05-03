@@ -1,6 +1,6 @@
 ;; of output
 (define *skip-frame* 30)
-(define *max-frame* 10000)
+(define *max-frame* 100000)
 
 ;; of domino
 (define *height* 50)
@@ -23,7 +23,7 @@
   (fall d))
 
 (define (collision d e)
-  (let1 dx (/ (- (+ (d 'x1) (d 'x2)) (+ (e 'x1) (e 'x2))) 20)
+  (let1 dx (/ (- (+ (d 'x1) (d 'x2)) (+ (e 'x1) (e 'x2))) 200000)
     (begin (inc! e 'vx (- dx)) 
            (inc! d 'vx dx)))
   (let1 o (/ (+ (d 'o) (e 'o)) 2)
