@@ -1,10 +1,12 @@
 <body>
-<script src="data.js"></script>
+<script src="data.js">
+  data = [[30,30,50,50], [40,40,60,60]];
+</script>
 <canvas id="C" width="800" height="200" style="border:black 1px solid"></canvas>
 <div onclick="run()" id="D">[start]</div>
 <script>
 var C, D;
-    data = [[30,30,50,50], [40,40,60,60]];
+
 function run () {
     idx = 0;
     C = document.getElementById("C").getContext("2d");
