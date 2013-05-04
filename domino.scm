@@ -34,6 +34,7 @@
 
 (define (fall d)
   (define (frict!)
+    (d 'vy (* (d 'vy) 0.93))
     (d 'vx (* (d 'vx) 0.8)))
   (call/cc (lambda (return)
     (inc! d 'vy *-g*) ;; gravity
