@@ -13,6 +13,8 @@
 (define *dt* 0.001)
 (define *g* 9.8)
 (define *-g* (- *g*))
+(define *pi* 3.1415926535897932384626434)
+(define *pi/2* (/ *pi* 2))
 
 (define (update d rest)
   (for-each
@@ -59,9 +61,10 @@
         (d 'y1 0)
         (d 'vy 0)
         (frict!)
+        (let* ((th (kado (d 't)))
+               (c (cos th)) (s (sin th)))
         (inc! d 'omega
-          (* -1 *M* *g* (cos (d 't)) *height/2* */I* *dt*))
-        (let ((c (cos (d 't))) (s (sin (d 't))))
+          (* -1 *M* *g* c *height/2* */I* *dt*))
         (d 'x2 (+ (d 'x1) (* *height* c)))
         (d 'y2 (* *height* s))))
 
@@ -69,9 +72,10 @@
         (d 'y2 0)
         (d 'vy 0)
         (frict!)
+        (let* ((th (kado (d 't)))
+               (c (cos th)) (s (sin th)))
         (inc! d 'omega
-          (* *M* *g* (cos (d 't)) *height/2* */I* *dt*))
-        (let ((c (cos (d 't))) (s (sin (d 't))))
+          (* *M* *g* c *height/2* */I* *dt*))
         (d 'x2 (- (d 'x2) (* *height* c)))
         (d 'y2 (* -1 *height* s)))))
 
