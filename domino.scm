@@ -23,7 +23,7 @@
   (fall d))
 
 (define (collision d e)
-  (let1 dx (/ (- (+ (d 'x1) (d 'x2)) (+ (e 'x1) (e 'x2))) 200000)
+  (let1 dx (/ (- (+ (d 'x1) (d 'x2)) (+ (e 'x1) (e 'x2))) 2)
     (begin (inc! e 'vx (- dx)) 
            (inc! d 'vx dx)))
   (let1 o (/ (+ (d 'o) (e 'o)) 2)
@@ -31,6 +31,8 @@
   (e 'o o)))
 
 (define (fall d)
+  (define (frict!)
+    (d 'vx (* (d 'vx) 0.8)))
   (call/cc (lambda (return)
     (inc! d 'vy *-g*) ;; gravity
 
@@ -56,6 +58,7 @@
       ((<= (d 'y1) 0)
         (d 'y1 0)
         (d 'vy 0)
+        (frict!)
         (inc! d 'omega
           (* -1 *M* *g* (cos (d 't)) *height/2* */I* *dt*))
         (let ((c (cos (d 't))) (s (sin (d 't))))
@@ -65,6 +68,7 @@
       ((<= (d 'y2) 0)
         (d 'y2 0)
         (d 'vy 0)
+        (frict!)
         (inc! d 'omega
           (* *M* *g* (cos (d 't)) *height/2* */I* *dt*))
         (let ((c (cos (d 't))) (s (sin (d 't))))
@@ -73,21 +77,23 @@
 
     (return #t))))
 
-(define (update-dominos ds)
-  (if (null? ds) '()
-      (if (update (car ds) (cdr ds))
-          (cons (car ds) (update-dominos (cdr ds)))
-          (update-dominos (cdr ds)))))
+(define (update-dominos ds zs)
+  (let rec ((ls ds) (ds '()) (zs zs))
+    (if (null? ls) (values ds zs)
+        (if (update (car ls) (cdr ls))
+            (rec (cdr ls) (cons (car ls) ds) zs)
+            (rec (cdr ls) ds (cons (car ls) zs))))))
 
 ;; main
 (define *cx* 0)
 (begin
   (print "data=[")
-  (let loop ((ds (read-dominos)))
+  (let loop ((ds (read-dominos)) (zombies '()))
     (set! *cx* (+ *cx* 1))
-    (if (and (< *cx* *max-frame*) (not (null? ds)))
-      (let1 ds (update-dominos ds)
-      (if (zero? (modulo *cx* *skip-frame*))
-        (display-dominos ds))
-      (loop ds))))
+    (when (and (< *cx* *max-frame*) (not (null? ds)))
+          (call-with-values (lambda () (update-dominos ds zombies))
+               (lambda (new-ds new-zs)
+                  (when (zero? (modulo *cx* *skip-frame*))
+                        (display-dominos (append new-ds new-zs)))
+                  (loop new-ds new-zs)))))
   (print "]"))

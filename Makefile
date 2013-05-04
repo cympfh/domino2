@@ -1,3 +1,6 @@
+chicken: main input
+	./main > data.js < input
+
 data.js: main.scm input
 	gosh ./main.scm > $@ < input
 
@@ -5,10 +8,7 @@ main.scm: macros.scm util.scm domino.scm
 	cat $^ > $@
 
 main: main.scm
-	csc -o $@ $^
-
-chicken: main input
-	./main > data.js < input
+	csc -O5 -o $@ $^
 
 clean:
 	rm -f data.js main.scm main
