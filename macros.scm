@@ -24,8 +24,3 @@
      (if (<= 0 (cross (- x1 x0) (- y1 y0) (- x2 x0) (- y2 y0)))
          1 -1))))
 
-(define-syntax kado
-  (syntax-rules ()
-    ((_ th)
-     (let1 alpha 0.01
-     (if (<= th *pi/2*) (+ th alpha) (- th alpha))))))
