@@ -10,6 +10,10 @@
   (syntax-rules ()
     ((_ test body ...) (if test (begin body ...)))))
 
+(define-syntax receive
+	(syntax-rules ()
+	  ((_ (x ...) proc body ...) (call-with-values (lambda () proc) (lambda (x ...) body ...)))))
+
 (define-syntax cross
   (syntax-rules ()
     ((_ x1 y1 x2 y2) (- (* x1 y2) (* x2 y1)))))

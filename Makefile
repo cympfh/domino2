@@ -4,7 +4,7 @@ chicken: main input
 data.js: main.scm input
 	gosh ./main.scm > $@ < input
 
-main.scm: macros.scm util.scm domino.scm
+main.scm: macros.scm util.scm kika.scm domino.scm
 	cat $^ > $@
 
 main: main.scm
