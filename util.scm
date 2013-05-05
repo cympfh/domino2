@@ -38,3 +38,13 @@
     (if (eq? a 'EOF) ac
         (loop (cons (make-domino a (read) (read)) ac))))))
 
+(define (center-of-mass d)
+  (values
+    (/ (+ (d 'x1) (d 'x2)) 2)
+    (/ (+ (d 'y1) (d 'y2)) 2)))
+
+(define (distance x1 y1 x2 y2)
+  (sqrt
+    (apply +
+      (map (lambda (x) (expt x 2))
+        (map - (list x1 y1) (list x2 y2))))))
