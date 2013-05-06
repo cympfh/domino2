@@ -11,8 +11,9 @@
     ((_ test body ...) (if test (begin body ...)))))
 
 (define-syntax receive
-	(syntax-rules ()
-	  ((_ (x ...) proc body ...) (call-with-values (lambda () proc) (lambda (x ...) body ...)))))
+  (syntax-rules ()
+    ((_ (x ...) proc body ...)
+     (call-with-values (lambda () proc) (lambda (x ...) body ...)))))
 
 (define-syntax cross
   (syntax-rules ()

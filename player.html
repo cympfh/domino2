@@ -1,5 +1,11 @@
-<body onclick="run()">
-<script src="./data.js"></script>
+<body onload="run()">
+<script type="text/javascript">
+  var script = document.createElement('script');
+  script.src = (location.href.split("?")[1] || "data.js");
+  script.type = 'text/javascript';
+  script.language = 'javascript';
+  document.body.appendChild(script);
+</script>
 <canvas id="C" width="800" height="220" style="border:black 1px solid"></canvas>
 <div id="D"><div>
 <script>
