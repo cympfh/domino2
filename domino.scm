@@ -1,5 +1,5 @@
 ;; of output
-(define *skip-frame* 30)
+(define *skip-frame* 90)
 (define *max-frame* 100000)
 
 ;; of domino
@@ -14,7 +14,7 @@
 (define */I* (/ *I*))
 
 ;; of world
-(define *dt* 0.001)
+(define *dt* 0.0005)
 (define *g* 9.8)
 (define *Mg* (* *M* *g*))
 (define *-g* (- *g*))
@@ -41,6 +41,21 @@
 
 (define (collision! d e)
   (define (dot a b) (apply + (map * a b)))
+  (define (away! d e)
+    (receive (dx _) (foot d)
+    (receive (ex _) (foot e)
+    (let while ()
+      (when (intersect d e)
+            (if (< dx ex)
+                (begin (inc! d 'x1 -0.1)
+                       (inc! d 'x2 -0.1)
+                       (inc! e 'x1 0.1)
+                       (inc! e 'x2 0.1))
+                (begin (inc! d 'x1 0.1)
+                       (inc! d 'x2 0.1)
+                       (inc! e 'x1 -0.1)
+                       (inc! e 'x2 -0.1)))
+            (while))))))
 
   (receive (x y) (find-intersect d e)
   (let ((dx (map - (if (> (d 'y1) (d 'y2)) (list (d 'x1) (d 'y1))
@@ -48,16 +63,20 @@
                    (if (> (e 'y1) (e 'y2)) (list (e 'x1) (e 'y1))
                                            (list (e 'x2) (e 'y2)))))
         (vr (map - (velocity-at d x y) (velocity-at e x y))))
-  (let1 A (* 30 (/ (dot dx vr) (dot vr vr)))
-  (let ((Px (* A (car vr) -1)) (Py (* -1 A (cadr vr))))
-  (inc! d 'vx (* Px *dt* */M*))
-  (inc! d 'vy (* Py *dt* */M*))
-  (inc! e 'vx (* Px *dt* */M* -1))
-  (inc! e 'vy (* Py *dt* */M* -1))
-  (receive (gx gy) (center-of-mass d)
-    (inc! d 'omega (* */I* *dt* (cross (- x gx) (- y gy) Px Py))))
-  (receive (gx gy) (center-of-mass e)
-    (inc! e 'omega (* */I* *dt* (cross (- x gx) (- y gy) (- Px) (- Py)))))
+  (let1 A (* -6 (/ (dot dx vr) (dot vr vr)))
+  (let ((Px (* A (car vr))) (Py (* A (cadr vr))))
+  ;(for-each display `("/* " ,Px ", " ,Py " */\n"))
+  (inc! d 'vx (* 800 Px *dt* */M*))
+  (inc! d 'vy (* 800 Py *dt* */M*))
+  (inc! e 'vx (* 800 Px *dt* */M* -1))
+  (inc! e 'vy (* 800 Py *dt* */M* -1))
+  ;(let1 o (/ (+ (d 'omega) (e 'omega)) 2)
+  ;  (d 'omega o) (e 'omega o))
+  (receive (fx fy) (foot d)
+    (inc! d 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py))))
+  (receive (fx fy) (foot e)
+    (inc! e 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py) -1)))
+  (away! d e)
   )))))
 
 (define (fall d)
@@ -91,6 +110,8 @@
       (inc! d 'y2 (* (d 'vy) *dt*)))
 
     (inc! d 'theta (* (d 'omega) *dt*))
+    (when (< (d 't) 0) (d 't 0))
+    (when (> (d 't) *pi*) (d 't *pi*))
 
     ; floor check
     (cond

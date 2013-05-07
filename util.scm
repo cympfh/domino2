@@ -43,6 +43,12 @@
     (/ (+ (d 'x1) (d 'x2)) 2)
     (/ (+ (d 'y1) (d 'y2)) 2)))
 
+(define (foot d)
+  (if (< (d 'y1) (d 'y2))
+      (values (d 'x1) (d 'y1))
+      (values (d 'x2) (d 'y2))))
+      
+
 (define (distance x1 y1 x2 y2)
   (sqrt
     (apply +
