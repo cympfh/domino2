@@ -1,5 +1,5 @@
 ;; of output
-(define *skip-frame* 90)
+(define *skip-frame* 50)
 (define *max-frame* 100000)
 
 ;; of domino
@@ -66,16 +66,16 @@
   (let1 A (* -6 (/ (dot dx vr) (dot vr vr)))
   (let ((Px (* A (car vr))) (Py (* A (cadr vr))))
   ;(for-each display `("/* " ,Px ", " ,Py " */\n"))
-  (inc! d 'vx (* 800 Px *dt* */M*))
-  (inc! d 'vy (* 800 Py *dt* */M*))
-  (inc! e 'vx (* 800 Px *dt* */M* -1))
-  (inc! e 'vy (* 800 Py *dt* */M* -1))
+  (inc! d 'vx (* 80 Px *dt* */M*))
+  (inc! d 'vy (* 80 Py *dt* */M*))
+  (inc! e 'vx (* 80 Px *dt* */M* -1))
+  (inc! e 'vy (* 80 Py *dt* */M* -1))
   ;(let1 o (/ (+ (d 'omega) (e 'omega)) 2)
   ;  (d 'omega o) (e 'omega o))
   (receive (fx fy) (foot d)
-    (inc! d 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py))))
+    (inc! d 'omega (* 80 */I* *dt* (cross (- x fx) (- y fy) Px Py))))
   (receive (fx fy) (foot e)
-    (inc! e 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py) -1)))
+    (inc! e 'omega (* 80 */I* *dt* (cross (- x fx) (- y fy) Px Py) -1)))
   (away! d e)
   )))))
 

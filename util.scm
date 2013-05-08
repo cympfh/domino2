@@ -35,7 +35,7 @@
 (define (read-dominos)
   (let loop ((ac '()))
     (let1 a (read)
-    (if (eq? a 'EOF) ac
+    (if (eof-object? a) ac
         (loop (cons (make-domino a (read) (read)) ac))))))
 
 (define (center-of-mass d)
