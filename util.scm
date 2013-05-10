@@ -47,10 +47,16 @@
   (if (< (d 'y1) (d 'y2))
       (values (d 'x1) (d 'y1))
       (values (d 'x2) (d 'y2))))
-      
 
 (define (distance x1 y1 x2 y2)
   (sqrt
     (apply +
       (map (lambda (x) (expt x 2))
         (map - (list x1 y1) (list x2 y2))))))
+
+(define (accel! d fx fy x y)
+  (inc! d 'vx (* fx */M* *dt*))
+  (inc! d 'vy (* fy */M* *dt*))
+  (receive (gx gy) (center-of-mass d)
+  (inc! d 'omega (* */I* *dt* (cross (- x gx) (- y gy) fx fy)))))
+

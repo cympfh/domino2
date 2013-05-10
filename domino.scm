@@ -1,25 +1,28 @@
 ;; of output
-(define *skip-frame* 80)
-(define *max-frame* 100000)
+(def
+  *skip-frame* 300
+  *max-frame*  3e5)
 
 ;; of domino
-(define *height* 50)
-(define *height/2* (/ *height* 2))
-(define *width* 5)
-(define *width/2* (/ *width* 2))
-(define *arg* (atan (/ *width* *height*)))
-(define *M* 10)
-(define */M* (/ *M*))
-(define *I* (* *M* *height* *height* (/ 12)))
-(define */I* (/ *I*))
+(def
+  *height*   50
+  *height/2* (/ *height* 2)
+  *width*    5
+  *width/2*  (/ *width* 2)
+  *arg*      (atan (/ *width* *height*))
+  *M*        10
+  */M*       (/ *M*)
+  *I*        (* *M* *height* *height* (/ 12))
+  */I*       (/ *I*))
 
 ;; of world
-(define *dt* 0.0005)
-(define *g* 9.8)
-(define *Mg* (* *M* *g*))
-(define *-g* (- *g*))
-(define *pi* 3.1415926535897932384626434)
-(define *pi/2* (/ *pi* 2))
+(def
+  *dt*   2e-4
+  *g*    9.8
+  *Mg*   (* *M* *g*)
+  *-g*   (- *g*)
+  *pi*   3.1415926535897932384626434
+  *pi/2* (/ *pi* 2))
 
 (define (update d rest)
   (for-each
@@ -40,7 +43,7 @@
                (else '(0 0)))))
 
 (define (collision! d e)
-  (define (dot a b) (apply + (map * a b)))
+
   (define (away! d e)
     (receive (dx _) (foot d)
     (receive (ex _) (foot e)
@@ -65,26 +68,22 @@
         (vr (map - (velocity-at d x y) (velocity-at e x y))))
   (let1 A (* -480 (/ (dot dx vr) (dot vr vr)))
   (let ((Px (* A (car vr))) (Py (* A (cadr vr))))
-  (inc! d 'vx (* Px *dt* */M*))
-  (inc! d 'vy (* Py *dt* */M*))
-  (inc! e 'vx (* Px *dt* */M* -1))
-  (inc! e 'vy (* Py *dt* */M* -1))
-  (receive (fx fy) (center-of-mass d)
-    (inc! d 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py))))
-  (receive (fx fy) (center-of-mass e)
-    (inc! e 'omega (* */I* *dt* (cross (- x fx) (- y fy) Px Py) -1)))
+  (accel! d Px Py x y)
+  (accel! e (- Px) (- Py) x y)
   (away! d e)
   )))))
 
 (define (fall d)
+
   (define (frict!)
-    (let1 f (* 0.4 *g*)
+    (let1 f (* 0.3 *g*)
+    (receive (fx fy) (foot d)
     (when (> (d 'vx) 0)
-          (begin (inc! d 'vx (- f))
+          (begin (accel! d (- f) 0 fx fy)
                  (when (< (d 'vx) 0) (d 'vx 0))))
     (when (< (d 'vx) 0)
-          (begin (inc! d 'vx f)
-                 (when (> (d 'vx) 0) (d 'vx 0))))))
+          (begin (accel! d f 0 fx fy)
+                 (when (> (d 'vx) 0) (d 'vx 0)))))))
 
   (define (moment theta)
      (cond ((> theta (+ *pi/2* *arg*))

@@ -1,3 +1,5 @@
+(define (dot a b) (apply + (map * a b)))
+
 (define (intersect d e)
   (let ((x1 (d 'x1)) (y1 (d 'y1)) (x2 (d 'x2)) (y2 (d 'y2))
         (x3 (e 'x1)) (y3 (e 'y1)) (x4 (e 'x2)) (y4 (e 'y2)))

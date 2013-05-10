@@ -1,3 +1,9 @@
+(define-syntax def
+  (syntax-rules ()
+    ((_ x v) (define x v))
+    ((_ x v y ...)
+      (begin (define x v) (def y ...)))))
+
 (define-syntax inc!
   (syntax-rules ()
     ((_ d sym diff) (d sym (+ (d sym) diff)))))
