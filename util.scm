@@ -1,11 +1,10 @@
 (use srfi-1)
 
-(define (make-domino x y t)
+(define (make-domino x t)
   (let ((theta t) (vx 0) (vy 0) (omega 0)
-        (x1 (- x (* *height/2* (cos t))))
-        (x2 (+ x (* *height/2* (cos t))))
-        (y1 (- y (* *height/2* (sin t))))
-        (y2 (+ y (* *height/2* (sin t)))))
+        (x1 x) (y1 0)
+        (x2 (+ x (* *height* (cos t))))
+        (y2 (* *height* (sin t))))
   (lambda args
     (if (= (length args) 1)
         (case (car args)
@@ -36,7 +35,7 @@
   (let loop ((ac '()))
     (let1 a (read)
     (if (eof-object? a) ac
-        (loop (cons (make-domino a (read) (read)) ac))))))
+        (loop (cons (make-domino a (read)) ac))))))
 
 (define (center-of-mass d)
   (values
