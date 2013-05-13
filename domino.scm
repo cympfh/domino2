@@ -1,7 +1,7 @@
 ;; of output
 (def
   *skip-frame* 300
-  *max-frame*  3e5)
+  *max-frame*  4e5)
 
 ;; of domino
 (def
@@ -47,18 +47,36 @@
   (define (away! d e)
     (receive (dx _) (foot d)
     (receive (ex _) (foot e)
-    (let while ()
+    (let while ((i 0))
+      (if (> i 1000)
+        (away->< d e))
       (when (intersect d e)
             (if (< dx ex)
-                (begin (inc! d 'x1 -0.1)
-                       (inc! d 'x2 -0.1)
-                       (inc! e 'x1 0.1)
-                       (inc! e 'x2 0.1))
-                (begin (inc! d 'x1 0.1)
-                       (inc! d 'x2 0.1)
-                       (inc! e 'x1 -0.1)
-                       (inc! e 'x2 -0.1)))
-            (while))))))
+                (begin
+                  (when (> (abs (d 'vx)) 0.02)
+                      (inc! d 'x1 -0.01)
+                      (inc! d 'x2 -0.01))
+                  (when (> (abs (e 'vx)) 0.02)
+                      (inc! e 'x1 0.01)
+                      (inc! e 'x2 0.01))
+                  ;(when (> (abs (d 'o)) 0.01)
+                  ;    (inc! d 't -0.01))
+                  ;(when (> (abs (e 'o)) 0.01)
+                  ;    (inc! e 't 0.01)))
+                )
+                (begin
+                  (when (> (abs (d 'vx)) 0.02)
+                      (inc! d 'x1 0.01)
+                      (inc! d 'x2 0.01))
+                  (when (> (abs (e 'vx)) 0.02)
+                      (inc! e 'x1 -0.01)
+                      (inc! e 'x2 -0.01))
+                  ;(when (> (abs (d 'o)) 0.02)
+                  ;    (inc! d 't 0.01))
+                  ;(when (> (abs (e 'o)) 0.02)
+                  ;    (inc! e 't -0.01))))
+                 ))
+            (while (+ i 1)))))))
 
   (receive (x y) (find-intersect d e)
   (let ((dx (map - (if (> (d 'y1) (d 'y2)) (list (d 'x1) (d 'y1))
