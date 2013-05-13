@@ -99,14 +99,13 @@
     (inc! d 'vy *-g*) ;; gravity
 
     (let1 dx (* (d 'vx) *dt*)
-      (inc! d 'x1 (* (d 'vx) *dt*))
-      (inc! d 'x2 (* (d 'vx) *dt*)))
-
+      (inc! d 'x1 dx)
+      (inc! d 'x2 dx))
     (let1 dy (* (d 'vy) *dt*)
-      (inc! d 'y1 (* (d 'vy) *dt*))
-      (inc! d 'y2 (* (d 'vy) *dt*)))
-
+      (inc! d 'y1 dy)
+      (inc! d 'y2 dy))
     (inc! d 'theta (* (d 'omega) *dt*))
+
     (when (< (d 't) 0) (d 't 0))
     (when (> (d 't) *pi*) (d 't *pi*))
 
